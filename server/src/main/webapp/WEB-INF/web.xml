@@ -9,31 +9,21 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  <servlet>
-    <description></description>
-    <display-name>Home</display-name>
-    <servlet-name>Home</servlet-name>
-    <servlet-class>servlet.Home</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Home</servlet-name>
-    <url-pattern>/Home</url-pattern>
-  </servlet-mapping>
-  
-  <servlet>
-		<servlet-name>jersey-serlvet</servlet-name>
-		<servlet-class>
-                     com.sun.jersey.spi.container.servlet.ServletContainer
-                </servlet-class>
-		<init-param>
-		     <param-name>com.sun.jersey.config.property.packages</param-name>
-		     <param-value>rest</param-value>
-		</init-param>
+ 
+ <servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>jersey-serlvet</servlet-name>
-		<url-pattern>/api/*</url-pattern>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+  
+  
 </web-app>

@@ -1,0 +1,9 @@
+<resources>
+  <Resource id="movieDatabase" type="javax.sql.DataSource">
+    JdbcDriver = com.mysql.jdbc.Driver
+    JdbcUrl = jdbc:mysql://51.254.132.239:3306/rated_app
+    UserName = root
+    Password = admin
+    JtaManaged = true
+  </Resource>
+</resources>
