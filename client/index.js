@@ -1,17 +1,9 @@
 var express=require('express');
-var mysql=require('mysql');
 var fs=require('fs');
+var elasticsearch=require('elasticsearch');
 
 var app=express();
 
-var connection=mysql.createConnection({
-	host : "51.254.132.239",
-	user : "root",
-	password : "admin",
-	charset : "utf8"
-});
-
-connection.query('USE rated_app');
 
 
 function readJSONFile(filename, callback) {
@@ -28,23 +20,26 @@ function readJSONFile(filename, callback) {
   });
 }
 
-app.use('/',function(req,res){
-	readJSONFile('data/movies.json',function(err,data){
-		var data=data.movies;
-		for(var i=0;i<data.length;i++){
-			var info={
-				description: data[i].description,
-				rate:1,
-				year:data[i].year,
-				name:data[i].title,
-				type:data[i].tags
-			};
-			var k=0;
-			connection.query('INSERT INTO Movie SET ?', info, function(err, result) {
-  				console.log(k+" "+err);
-  				k++;
-  			});
-		}
+var client=elasticsearch.Client({
+  host: "51.254.132.239:9200",
+  requestTimeout: 900000, maxSockets: 20
+});
+
+console.log("ok");
+
+app.use('/movies/:name',function(req,res){
+	console.log(req.params.name);
+	client.search({
+	  index: 'movies',
+	  type: req.params.name,
+	  size: 20
+	}, function (error, response) {
+		var data=response.hits.hits;
+		var movies=[];
+		for(var i=0;i<data.length;i++)
+			movies.push(data[i]._source.info);
+	   	res.send(movies);
+
 	});
 });
 
